@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Motor Lab Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Follows Motor Control Lab's own system: light, hairline borders, one vermilion accent.
+   Layout: a single reading column with wide breakouts for wireframes and project specs. */
+:root {
+  --bg: #fafaf8;
+  --panel: #ffffff;
+  --ink: #161616;
+  --muted: #6c6c66;
+  --line: #e7e6e1;
+  --accent: #c2410c;
+  --accent-soft: #fdf1ea;
+  --good: #15803d;
+  --warn: #b45309;
+  --bad: #b91c1c;
+  --wf: #f3f2ee;
+  --wf-ink: #a19f98;
+  --wf-line: #cfcdc6;
+  --ph-r: #d63a3a; --ph-y: #b98300; --ph-b: #2457c5;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  --radius: 10px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141413; --panel: #1c1c1a; --ink: #ecebe6; --muted: #a3a29b; --line: #2f2e2b;
+    --accent: #f5784a; --accent-soft: #3a2117; --good: #4ade80; --warn: #f5a524; --bad: #f87171;
+    --wf: #222220; --wf-ink: #6f6e68; --wf-line: #3d3c38;
+    --ph-r: #f06a6a; --ph-y: #e0b23a; --ph-b: #6b93ef;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141413; --panel: #1c1c1a; --ink: #ecebe6; --muted: #a3a29b; --line: #2f2e2b;
+  --accent: #f5784a; --accent-soft: #3a2117; --good: #4ade80; --warn: #f5a524; --bad: #f87171;
+  --wf: #222220; --wf-ink: #6f6e68; --wf-line: #3d3c38;
+  --ph-r: #f06a6a; --ph-y: #e0b23a; --ph-b: #6b93ef;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--font-sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.2; margin: 0; }
+p { margin: 0; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.read { max-width: 68ch; }
+code, .mono { font-family: var(--font-mono); font-size: 0.88em; }
+
+header.top { padding: 56px 0 28px; border-bottom: 1px solid var(--line); }
+.eyebrow { font: 500 12px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 700; letter-spacing: -0.02em; margin: 14px 0 14px; }
+.lede { font-size: 18px; color: var(--muted); max-width: 64ch; }
+.stats { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 24px; font-variant-numeric: tabular-nums; }
+.stats div { display: flex; gap: 8px; align-items: baseline; }
+.stats b { font-size: 22px; font-weight: 600; }
+.stats span { color: var(--muted); font-size: 14px; }
+
+nav.toc { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); }
+nav.toc .wrap { display: flex; gap: 4px 20px; flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; font-size: 14px; }
+nav.toc a { color: var(--muted); text-decoration: none; }
+nav.toc a:hover { color: var(--ink); }
+nav.toc a span { font-family: var(--font-mono); color: var(--accent); margin-right: 6px; }
+
+section { padding: 56px 0 8px; scroll-margin-top: 48px; }
+.sec-head { display: grid; gap: 10px; margin-bottom: 28px; }
+.sec-head .num { font: 500 13px/1 var(--font-mono); color: var(--accent); }
+h2 { font-size: 28px; font-weight: 650; letter-spacing: -0.01em; }
+h3 { font-size: 18px; font-weight: 600; }
+.muted { color: var(--muted); }
+
+/* learning loop */
+.loop { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0 28px; }
+.chip { font-size: 14px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); white-space: nowrap; }
+.chip.new { border: 1.5px dashed var(--accent); color: var(--accent); background: var(--accent-soft); font-weight: 500; }
+.arrow { color: var(--wf-ink); font-size: 14px; }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 13px; color: var(--muted); margin-top: -12px; margin-bottom: 28px; }
+.legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; vertical-align: -2px; margin-right: 6px; border: 1px solid var(--line); background: var(--panel); }
+.legend i.n { border: 1.5px dashed var(--accent); background: var(--accent-soft); }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 820px) { .two { grid-template-columns: 1fr; } }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+.panel h3 { margin-bottom: 10px; }
+ul.plain { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+
+.cov { display: grid; gap: 8px; font-size: 14px; }
+.cov-row { display: grid; grid-template-columns: 150px 1fr 54px; gap: 10px; align-items: center; }
+.cov-row .bar { height: 10px; border-radius: 3px; background: var(--wf); display: flex; overflow: hidden; }
+.cov-row .bar i { display: block; height: 100%; background: var(--muted); opacity: .55; }
+.cov-row .bar i.add { background: var(--accent); opacity: 1; }
+.cov-row .n { font-family: var(--font-mono); font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* features */
+.groups { display: grid; gap: 40px; }
+.group-title { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.group-title h3 { font-size: 20px; }
+.feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.feat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 10px; align-content: start; }
+.feat.p0 { border-left: 3px solid var(--accent); }
+.feat-top { display: flex; justify-content: space-between; gap: 10px; align-items: start; }
+.feat h4 { font-size: 16px; font-weight: 600; }
+.feat .fid { font: 500 12px var(--font-mono); color: var(--muted); }
+.pills { display: flex; gap: 6px; flex-shrink: 0; }
+.pill { font: 500 11px/1 var(--font-mono); padding: 5px 7px; border-radius: 5px; border: 1px solid var(--line); color: var(--muted); }
+.pill.p0 { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pill.p1 { color: var(--accent); border-color: var(--accent); }
+.feat p { font-size: 14.5px; }
+.feat dl { margin: 0; display: grid; gap: 6px; font-size: 13.5px; }
+.feat dt { font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.feat dd { margin: 0; }
+
+/* wireframes */
+.wf-list { display: grid; gap: 48px; }
+.wf-item { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; align-items: start; }
+@media (max-width: 980px) { .wf-item { grid-template-columns: 1fr; } }
+.wf-scroll { overflow-x: auto; border-radius: var(--radius); }
+.wf { min-width: 720px; border: 1px solid var(--wf-line); border-radius: var(--radius); background: var(--panel); font: 12px/1.45 var(--font-mono); color: var(--muted); overflow: hidden; }
+.wf-chrome { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-bottom: 1px solid var(--wf-line); background: var(--wf); }
+.wf-chrome i { width: 9px; height: 9px; border-radius: 50%; background: var(--wf-line); }
+.wf-chrome span { margin-left: 10px; padding: 2px 10px; border-radius: 5px; background: var(--panel); border: 1px solid var(--wf-line); }
+.wf-nav { display: flex; gap: 16px; align-items: center; padding: 10px 16px; border-bottom: 1px dashed var(--wf-line); }
+.wf-nav b { color: var(--ink); font-weight: 600; margin-right: auto; }
+.wf-nav .on { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+.wf-body { padding: 16px; display: grid; gap: 12px; }
+.box { border: 1px dashed var(--wf-line); border-radius: 8px; padding: 12px; background: var(--panel); position: relative; display: grid; gap: 8px; align-content: start; }
+.box.fill { background: var(--wf); }
+.box h5 { margin: 0; font: 600 12px var(--font-mono); color: var(--ink); }
+.ln { height: 7px; border-radius: 4px; background: var(--wf); }
+.box.fill .ln { background: var(--wf-line); }
+.btn { display: inline-block; border: 1px solid var(--ink); color: var(--ink); border-radius: 6px; padding: 4px 10px; font-weight: 500; width: max-content; }
+.btn.pri { background: var(--ink); color: var(--panel); }
+.btn.ghost { border-color: var(--wf-line); color: var(--muted); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.sp { justify-content: space-between; }
+.cv { border: 1px dashed var(--wf-line); border-radius: 6px; background: var(--wf); min-height: 90px; position: relative; overflow: hidden; }
+.cv svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.co { position: absolute; top: -9px; right: -9px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font: 600 12px/22px var(--font-sans); text-align: center; z-index: 2; }
+.tick { color: var(--good); } .cross { color: var(--bad); }
+.code { background: var(--wf); border-radius: 6px; padding: 10px 12px; white-space: pre; color: var(--ink); font-size: 11.5px; line-height: 1.55; overflow: hidden; }
+.code .k { color: var(--accent); } .code .c { color: var(--wf-ink); }
+.bubble { padding: 8px 10px; border-radius: 8px; background: var(--wf); color: var(--ink); max-width: 92%; }
+.bubble.me { justify-self: end; background: var(--accent-soft); }
+.wf-notes h3 { margin-bottom: 6px; }
+.wf-notes .route { font: 500 12px var(--font-mono); color: var(--accent); margin-bottom: 10px; display: block; }
+.wf-notes ol { margin: 12px 0 0; padding-left: 0; list-style: none; display: grid; gap: 10px; counter-reset: n; font-size: 14px; }
+.wf-notes li { counter-increment: n; display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+.wf-notes li::before { content: counter(n); width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: #fff; font: 600 12px/22px var(--font-sans); text-align: center; }
+.ms { display: flex; gap: 0; align-items: center; }
+.ms span { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--wf-line); display: grid; place-items: center; font-size: 10px; }
+.ms span.d { background: var(--good); border-color: var(--good); color: #fff; }
+.ms span.a { border-color: var(--accent); color: var(--accent); }
+.ms em { width: 40px; height: 1.5px; background: var(--wf-line); }
+.mbar { height: 8px; border-radius: 4px; background: var(--wf); overflow: hidden; }
+.mbar i { display: block; height: 100%; background: var(--accent); }
+
+/* projects */
+.ladder { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); margin-bottom: 28px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; min-width: 720px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+td a { color: var(--ink); text-decoration: none; font-weight: 500; }
+td a:hover { color: var(--accent); }
+.lv { font: 500 11px/1 var(--font-mono); padding: 4px 7px; border-radius: 5px; white-space: nowrap; border: 1px solid var(--line); }
+.lv-Beginner { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, transparent); }
+.lv-Intermediate { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+.lv-Advanced { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
+.lv-Frontier { color: var(--ph-b); border-color: color-mix(in srgb, var(--ph-b) 40%, transparent); }
+
+.proj-list { display: grid; gap: 20px; }
+.proj { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; scroll-margin-top: 56px; display: grid; gap: 18px; }
+.proj-head { display: grid; gap: 8px; }
+.proj-meta { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--muted); align-items: center; font-variant-numeric: tabular-nums; }
+.proj-meta code { color: var(--ink); }
+.proj h3 { font-size: 21px; }
+.proj .tag { color: var(--muted); max-width: 70ch; }
+.proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
+@media (max-width: 820px) { .proj-grid { grid-template-columns: 1fr; } }
+.proj h4 { font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 8px; }
+.proj ol, .proj ul { margin: 0; padding-left: 20px; display: grid; gap: 5px; font-size: 14.5px; }
+.parts { display: grid; gap: 4px; font-size: 14px; }
+.parts div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dotted var(--line); padding-bottom: 4px; }
+.parts span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--muted); }
+.parts .tot { font-weight: 600; border-bottom: 0; }
+.parts .tot span:last-child { color: var(--ink); }
+.miles { display: grid; gap: 8px; }
+.mile { display: grid; grid-template-columns: 26px 1fr; gap: 10px; font-size: 14px; }
+.mile b { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--accent); color: var(--accent); font-size: 12px; }
+.mile .acc { color: var(--muted); font-size: 13.5px; }
+.deliv { background: var(--accent-soft); border-radius: 8px; padding: 12px 14px; font-size: 14.5px; }
+.safety { font-size: 13.5px; color: var(--warn); }
+.full { grid-column: 1 / -1; }
+
+.rubric { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 820px) { .rubric { grid-template-columns: 1fr 1fr; } }
+.rubric div { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: var(--panel); font-size: 13.5px; display: grid; gap: 4px; }
+.rubric b { font-size: 14px; }
+
+pre.schema { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; overflow-x: auto; font: 13px/1.6 var(--font-mono); margin: 0; }
+pre.schema .c { color: var(--muted); } pre.schema .a { color: var(--accent); }
+.copy-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 16px 0 0; }
+button.copy { font: 500 14px var(--font-sans); padding: 9px 14px; border-radius: 8px; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); cursor: pointer; }
+button.copy:hover { opacity: .88; }
+.copy-msg { font-size: 13px; color: var(--muted); }
+textarea#tsout { width: 100%; height: 160px; margin-top: 12px; font: 12px/1.5 var(--font-mono); padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); color: var(--ink); display: none; }
+
+.phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .phases { grid-template-columns: 1fr; } }
+.phase { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; display: grid; gap: 12px; align-content: start; }
+.phase .when { font: 500 12px var(--font-mono); color: var(--accent); }
+.phase ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14.5px; }
+.phase .files { font: 12px/1.6 var(--font-mono); color: var(--muted); border-top: 1px solid var(--line); padding-top: 10px; }
+
+footer { padding: 56px 0 64px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">Motor Control Lab · product roadmap · November 2026</div>
+    <h1>From lessons to mastery to real builds</h1>
+    <p class="lede">The app already teaches well: every lesson pairs theory with a live simulation, a quiz, numeric challenges, a debugging case and a proof-of-work task. What it lacks is what happens after a lesson: remembering it, knowing when you have mastered it, writing real control code, and carrying a hardware build through to a finished result you can show.</p>
+    <div class="stats" aria-label="What the app has today">
+      <div><b>6</b><span>tracks</span></div>
+      <div><b>30</b><span>lessons</span></div>
+      <div><b>34</b><span>build projects</span></div>
+      <div><b>6</b><span>animated explainers</span></div>
+      <div><b>8</b><span>live-lab fault modes</span></div>
+      <div><b>13</b><span>week route</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Sections">
+  <div class="wrap">
+    <a href="#today"><span>01</span>Today</a>
+    <a href="#features"><span>02</span>Features</a>
+    <a href="#wireframes"><span>03</span>Wireframes</a>
+    <a href="#projects"><span>04</span>New projects</a>
+    <a href="#schema"><span>05</span>Data model</a>
+    <a href="#plan"><span>06</span>Build order</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- 01 -->
+<section id="today">
+  <div class="sec-head">
+    <span class="num">01</span>
+    <h2>Where the learning loop breaks</h2>
+    <p class="read muted">The lesson page covers understanding well. The dashed steps below are where a learner currently drops out of the app and has to manage alone.</p>
+  </div>
+  <div class="loop" aria-label="Learning loop">
+    <span class="chip">Read theory</span><span class="arrow">→</span>
+    <span class="chip">Play the sim</span><span class="arrow">→</span>
+    <span class="chip new">Worked example</span><span class="arrow">→</span>
+    <span class="chip">Quiz</span><span class="arrow">→</span>
+    <span class="chip">Challenge</span><span class="arrow">→</span>
+    <span class="chip">Debug case</span><span class="arrow">→</span>
+    <span class="chip new">Write the code</span><span class="arrow">→</span>
+    <span class="chip new">Review in 3 days</span><span class="arrow">→</span>
+    <span class="chip new">Mastery check</span><span class="arrow">→</span>
+    <span class="chip">Build project</span><span class="arrow">→</span>
+    <span class="chip new">Track the build</span><span class="arrow">→</span>
+    <span class="chip new">Portfolio</span>
+  </div>
+  <div class="legend"><span><i></i>Exists today</span><span><i class="n"></i>Proposed</span></div>
+
+  <div class="two">
+    <div class="panel">
+      <h3>What the code tells us</h3>
+      <ul class="plain">
+        <li>Progress is one flat XP number in <code>localStorage</code> (<code>emk-progress-v2</code>). It counts completion, not retention.</li>
+        <li>Quiz items and challenges are answered once and never come back, so most of what is learned in week 2 is gone by week 9.</li>
+        <li>The Live lab FOC model in <code>lib/sim/lab.ts</code> is the app's best asset, but only the app's own code drives it. Learners can never put their own controller in the loop.</li>
+        <li>Projects are good static briefs with no way to record progress, measurements or spend.</li>
+        <li>Lessons have no prerequisite links, so the 13-week route is the only map.</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Lessons with the thinnest project coverage</h3>
+      <p class="muted" style="font-size:14px;margin-bottom:12px">Projects linked per lesson. Grey bars are existing projects, vermilion bars are added by the 10 new projects in section 04.</p>
+      <div class="cov" id="cov"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 -->
+<section id="features">
+  <div class="sec-head">
+    <span class="num">02</span>
+    <h2>Sixteen features in four groups</h2>
+    <p class="read muted">Grouped by the job each one does for the learner. <b>P0</b> features close the biggest gaps and build on code that already exists. Effort is S (under 1 week), M (1–2 weeks) or L (3+ weeks) for one developer.</p>
+  </div>
+  <div class="groups" id="groups"></div>
+</section>
+
+<!-- 03 -->
+<section id="wireframes">
+  <div class="sec-head">
+    <span class="num">03</span>
+    <h2>Wireframes</h2>
+    <p class="read muted">Low-fidelity layouts for the six new screens, drawn with the app's real content. Numbered markers match the notes beside each frame. On a phone, scroll each frame sideways.</p>
+  </div>
+  <div class="wf-list">
+
+    <!-- W1 Home -->
+    <div class="wf-item">
+      <div class="wf-scroll"><div class="wf">
+        <div class="wf-chrome"><i></i><i></i><i></i><span>motorlab / </span></div>
+        <div class="wf-nav"><b>Motor Control Lab</b><span>Tracks</span><span>Map</span><span>Projects</span><span>Sandbox</span><span>Live lab</span><span>Arena</span><span class="btn ghost">Review · 12</span></div>
+        <div class="wf-body" style="grid-template-columns: 1.4fr 1fr;">
+          <div style="display:grid;gap:12px">
+            <div class="box fill"><span class="co">1</span>
+              <div class="row sp"><h5>Today</h5><span>Week 7 of 13 · streak 9 days</span></div>
+              <div class="row sp"><span style="color:var(--ink)">Review 12 cards · about 6 min</span><span class="btn pri">Start review</span></div>
+              <div class="ln" style="width:70%"></div>
+            </div>
+            <div class="box"><span class="co">2</span>
+              <h5>Continue</h5>
+              <div class="row sp"><span style="color:var(--ink)">Clarke and Park transforms · worked example, step 3 of 6</span><span class="btn">Resume</span></div>
+            </div>
+            <div class="box">
+              <h5>This week · Clarke, Park and the d-q model</h5>
+              <div class="row"><span class="tick">✓</span> Clarke and Park transforms <span style="margin-left:auto">Mastered</span></div>
+              <div class="row"><span>◐</span> PMSM d-q model and reluctance torque <span style="margin-left:auto">Practised</span></div>
+              <div class="row"><span>○</span> Induction motors: slip and torque <span style="margin-left:auto">Not started</span></div>
+            </div>
+          </div>
+          <div style="display:grid;gap:12px">
+            <div class="box"><span class="co">3</span>
+              <h5>Mastery by track</h5>
+              <div>T01 Foundations</div><div class="mbar"><i style="width:82%"></i></div>
+              <div>T02 Machines</div><div class="mbar"><i style="width:64%"></i></div>
+              <div>T03 Power electronics</div><div class="mbar"><i style="width:48%"></i></div>
+              <div>T04 Motor control</div><div class="mbar"><i style="width:30%"></i></div>
+              <div>T05 Embedded</div><div class="mbar"><i style="width:12%"></i></div>
+            </div>
+            <div class="box"><span class="co">4</span>
+              <h5>Active build</h5>
+              <span style="color:var(--ink)">Encoder speed: M, T and M/T methods</span>
+              <div class="ms"><span class="d">✓</span><em></em><span class="a">2</span><em></em><span>3</span></div>
+              <span>₹1,640 of ₹2,200 spent · 6.5 h logged</span>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <div class="wf-notes">
+        <span class="route">/ (home, signed-in state)</span>
+        <h3>Home becomes “Today”</h3>
+        <p class="muted" style="font-size:14px">The landing page stays for first visits. Once progress exists, home opens on what to do next.</p>
+        <ol>
+          <li>Review queue first: the one habit that keeps earlier tracks from fading. Card count and time estimate come from the scheduler.</li>
+          <li>Resume where you stopped, down to the step of a worked example.</li>
+          <li>Mastery replaces the single XP bar as the main progress signal. XP stays in the header.</li>
+          <li>The active project from the workspace, with milestone dots and budget spent.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- W2 Map -->
+    <div class="wf-item">
+      <div class="wf-scroll"><div class="wf">
+        <div class="wf-chrome"><i></i><i></i><i></i><span>motorlab / map</span></div>
+        <div class="wf-nav"><b>Motor Control Lab</b><span>Tracks</span><span class="on">Map</span><span>Projects</span><span>Sandbox</span><span>Live lab</span><span>Arena</span></div>
+        <div class="wf-body" style="grid-template-columns: 1fr 210px;">
+          <div class="box" style="padding:8px"><span class="co">1</span>
+            <svg viewBox="0 0 560 270" style="width:100%;height:auto" font-family="var(--font-mono)" font-size="10">
+              <g fill="var(--muted)">
+                <text x="40" y="14">T01</text><text x="130" y="14">T02</text><text x="220" y="14">T03</text><text x="310" y="14">T04</text><text x="400" y="14">T05</text><text x="490" y="14">T06</text>
+                <text x="0" y="60">Basic</text><text x="0" y="140">Fund.</text><text x="0" y="220">Adv.</text>
+              </g>
+              <g stroke="var(--wf-line)" stroke-width="1.2" fill="none">
+                <path d="M70 66 C 90 100, 120 110, 150 136"/>
+                <path d="M70 66 L70 136"/>
+                <path d="M70 146 L70 216"/>
+                <path d="M70 226 C 110 240, 130 230, 150 220"/>
+                <path d="M160 66 L160 136"/><path d="M160 146 L160 216"/>
+                <path d="M250 66 L250 136"/><path d="M250 146 L250 216"/>
+                <path d="M340 66 L340 136"/>
+                <path d="M160 226 C 230 250, 290 240, 330 226"/>
+                <path stroke="var(--accent)" stroke-width="2" d="M340 146 L340 216"/>
+                <path stroke="var(--accent)" stroke-width="2" d="M250 226 C 290 250, 310 240, 330 226"/>
+                <path d="M340 226 L420 226"/><path d="M430 66 L430 136"/><path d="M430 146 L430 216"/>
+                <path d="M520 66 L520 136"/><path d="M520 146 L520 216"/>
+              </g>
+              <g font-size="9.5">
+                <rect x="40" y="46" width="62" height="22" rx="5" fill="var(--good)"/><text x="48" y="61" fill="#fff">phasors</text>
+                <rect x="40" y="126" width="62" height="22" rx="5" fill="var(--good)"/><text x="46" y="141" fill="#fff">3-phase</text>
+                <rect x="40" y="206" width="62" height="22" rx="5" fill="var(--good)"/><text x="46" y="221" fill="#fff">em torque</text>
+                <rect x="130" y="46" width="62" height="22" rx="5" fill="var(--good)"/><text x="137" y="61" fill="#fff">DC motor</text>
+                <rect x="130" y="126" width="62" height="22" rx="5" fill="var(--good)"/><text x="136" y="141" fill="#fff">six-step</text>
+                <rect x="130" y="206" width="62" height="22" rx="5" fill="var(--wf)" stroke="var(--good)" stroke-width="1.5"/><text x="138" y="221" fill="var(--ink)">PMSM dq</text>
+                <rect x="220" y="46" width="62" height="22" rx="5" fill="var(--good)"/><text x="230" y="61" fill="#fff">PWM</text>
+                <rect x="220" y="126" width="62" height="22" rx="5" fill="var(--wf)" stroke="var(--good)" stroke-width="1.5"/><text x="226" y="141" fill="var(--ink)">MOSFET</text>
+                <rect x="220" y="206" width="62" height="22" rx="5" fill="var(--wf)" stroke="var(--good)" stroke-width="1.5"/><text x="230" y="221" fill="var(--ink)">SVPWM</text>
+                <rect x="310" y="46" width="62" height="22" rx="5" fill="var(--good)"/><text x="315" y="61" fill="#fff">PI ctrl</text>
+                <rect x="310" y="126" width="62" height="22" rx="5" fill="var(--good)"/><text x="314" y="141" fill="#fff">Clarke/Park</text>
+                <rect x="308" y="204" width="66" height="26" rx="6" fill="var(--accent-soft)" stroke="var(--accent)" stroke-width="2"/><text x="324" y="221" fill="var(--accent)">FOC</text>
+                <rect x="400" y="46" width="62" height="22" rx="5" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="3 3"/><text x="412" y="61" fill="var(--muted)">ADC</text>
+                <rect x="400" y="126" width="62" height="22" rx="5" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="3 3"/><text x="408" y="141" fill="var(--muted)">timing</text>
+                <rect x="400" y="206" width="62" height="22" rx="5" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="3 3"/><text x="406" y="221" fill="var(--muted)">telemetry</text>
+                <rect x="490" y="46" width="62" height="22" rx="5" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="3 3"/><text x="500" y="61" fill="var(--muted)">thrust</text>
+                <rect x="490" y="126" width="62" height="22" rx="5" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="3 3"/><text x="500" y="141" fill="var(--muted)">sizing</text>
+                <rect x="490" y="206" width="62" height="22" rx="5" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="3 3"/><text x="496" y="221" fill="var(--muted)">stability</text>
+              </g>
+              <g font-size="9.5" fill="var(--muted)">
+                <rect x="40" y="252" width="10" height="10" rx="2" fill="var(--good)"/><text x="54" y="261">Mastered</text>
+                <rect x="120" y="252" width="10" height="10" rx="2" fill="var(--wf)" stroke="var(--good)"/><text x="134" y="261">Practised</text>
+                <rect x="200" y="252" width="10" height="10" rx="2" fill="var(--panel)" stroke="var(--wf-line)" stroke-dasharray="2 2"/><text x="214" y="261">Not ready yet</text>
+              </g>
+            </svg>
+          </div>
+          <div class="box fill"><span class="co">2</span>
+            <h5>Field-oriented control</h5>
+            <span>Advanced · 120 min · T04</span>
+            <span style="color:var(--ink)">Needs</span>
+            <span><span class="tick">✓</span> Clarke and Park<br><span class="tick">✓</span> PI control<br><span>◐</span> SVPWM (practised)</span>
+            <span style="color:var(--ink)">Opens up</span>
+            <span>Telemetry · Sensorless · e-bike FOC project</span>
+            <span class="btn pri">Open lesson</span>
+            <span class="btn ghost">Test out (8 q)</span><span class="co" style="top:auto;bottom:16px;right:-9px">3</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="wf-notes">
+        <span class="route">/map</span>
+        <h3>Skill map</h3>
+        <p class="muted" style="font-size:14px">Tracks as columns, levels as rows, prerequisite links as lines. The highlighted path shows why FOC is ready to start.</p>
+        <ol>
+          <li>Node fill shows mastery. Dashed nodes still have unmet prerequisites, but nothing is locked: learners can always open a lesson.</li>
+          <li>Selecting a node lists what it needs, what it opens up, and linked projects.</li>
+          <li>“Test out” runs a short check so experienced learners skip lessons they already know.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- W3 Lesson -->
+    <div class="wf-item">
+      <div class="wf-scroll"><div class="wf">
+        <div class="wf-chrome"><i></i><i></i><i></i><span>motorlab / learn / clarke-park</span></div>
+        <div class="wf-nav"><b>Motor Control Lab</b><span>T04 · Fundamental · 75 min</span><span class="btn ghost">Ask tutor</span></div>
+        <div class="wf-body" style="grid-template-columns: 1fr 230px;">
+          <div style="display:grid;gap:12px">
+            <div class="box"><h5>Clarke and Park transforms</h5><div class="ln"></div><div class="ln" style="width:92%"></div><div class="ln" style="width:60%"></div>
+              <span>Electrical angle <span style="border-bottom:1px dashed var(--accent);color:var(--accent)">θₑ = p·θₘ</span> …</span><span class="co">3</span>
+            </div>
+            <div class="cv" style="min-height:96px">
+              <svg viewBox="0 0 400 96" preserveAspectRatio="none"><path d="M0 48 Q 25 8 50 48 T 100 48 T 150 48 T 200 48 T 250 48 T 300 48 T 350 48 T 400 48" fill="none" stroke="var(--ph-r)" stroke-width="1.5"/><path d="M0 70 Q 25 30 50 70" fill="none" stroke="var(--ph-b)" opacity=".0"/><path d="M0 30 L400 30" stroke="var(--ph-b)" stroke-width="1.5"/><path d="M0 62 L400 62" stroke="var(--ph-y)" stroke-width="1.5"/></svg>
+            </div>
+            <div class="box fill"><span class="co">1</span>
+              <div class="row sp"><h5>Worked example · phase-B gain error</h5><span>step 3 of 6</span></div>
+              <span style="color:var(--ink)">1. Write iᵦ with a 1.25 gain on phase B.</span>
+              <span style="color:var(--ink)">2. Substitute into Clarke: α unaffected, β gains a term at −fₑ.</span>
+              <span style="color:var(--ink)">3. Rotate by θₑ: the −fₑ term appears at 2·fₑ in d and q.</span>
+              <div class="row"><span class="btn">Show next step</span><span class="btn ghost">I've got it, let me try</span></div>
+            </div>
+            <div class="box"><h5>Your turn</h5><span>Phase A has a +2 A offset at 50 Hz electrical. At what frequency does iq ripple?</span><div class="row"><span class="btn ghost">____ Hz</span><span class="btn">Check</span></div></div>
+          </div>
+          <div class="box" style="align-content:start"><span class="co">2</span>
+            <h5>Tutor · hints only</h5>
+            <div class="bubble me">Why does a gain error give 2× ripple but an offset gives 1×?</div>
+            <div class="bubble">Before I answer: in the sim, set gain B to 1.25. What shape does the α-β path become?</div>
+            <div class="bubble me">An ellipse</div>
+            <div class="bubble">Right. An ellipse is a circle plus a circle spinning backwards. Seen from a frame rotating at +fₑ, how fast does the backwards one go by?</div>
+            <div class="ln" style="height:22px;border:1px dashed var(--wf-line);background:var(--panel)"></div>
+          </div>
+        </div>
+      </div></div>
+      <div class="wf-notes">
+        <span class="route">/learn/[lesson]</span>
+        <h3>Lesson additions</h3>
+        <p class="muted" style="font-size:14px">The existing layout stays. Two blocks and one overlay are added.</p>
+        <ol>
+          <li>Worked example between the sim and the challenges, revealed one step at a time. Learners can skip straight to a similar problem when they feel ready.</li>
+          <li>Tutor drawer. It knows this lesson's theory, the current slider values and the learner's wrong answers. It is told to ask questions and give hints, and never to give a challenge's answer outright.</li>
+          <li>Every equation and term links to the formula sheet, with units and the lesson it came from.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- W4 Sandbox -->
+    <div class="wf-item">
+      <div class="wf-scroll"><div class="wf">
+        <div class="wf-chrome"><i></i><i></i><i></i><span>motorlab / sandbox / current-loop</span></div>
+        <div class="wf-nav"><b>Motor Control Lab</b><span class="on">Sandbox</span><span>Exercise 3 of 8</span><span class="btn pri">▶ Run 200 ms</span></div>
+        <div class="wf-body" style="grid-template-columns: 150px 1fr 220px;">
+          <div class="box fill"><span class="co">1</span><h5>Exercises</h5>
+            <span><span class="tick">✓</span> 1 PI speed loop</span><span><span class="tick">✓</span> 2 Clarke + Park</span><span style="color:var(--ink)">● 3 Current loop</span><span>○ 4 Anti-windup</span><span>○ 5 SVPWM</span><span>○ 6 Dead-time comp.</span><span>○ 7 Field weakening</span><span>○ 8 BEMF observer</span>
+          </div>
+          <div class="box" style="padding:8px"><span class="co">2</span>
+<div class="code"><span class="c">// runs every 50 µs (20 kHz) inside a Web Worker</span>
+<span class="k">export function</span> isr(s, ref, st) {
+  <span class="k">const</span> [ia, ib] = [s.ia, s.ib];
+  <span class="k">const</span> { d, q } = park(clarke(ia, ib), s.theta);
+  st.iq += KI * (ref.iq - q) * TS;
+  <span class="k">const</span> vq = KP * (ref.iq - q) + st.iq;
+  <span class="k">const</span> vd = KP * (ref.id - d) + st.id;
+  <span class="k">return</span> svpwm(invPark(vd, vq, s.theta), s.vdc);
+}</div>
+            <div class="row"><span>Kp 0.42</span><span>Ki 180</span><span>motor: 2306 drone</span><span>Vdc 24 V</span></div>
+          </div>
+          <div style="display:grid;gap:12px">
+            <div class="cv" style="min-height:110px"><span class="co">3</span>
+              <svg viewBox="0 0 200 110" preserveAspectRatio="none"><path d="M0 90 L30 90 L30 30 L200 30" fill="none" stroke="var(--wf-ink)" stroke-dasharray="4 3"/><path d="M0 90 L30 90 C 40 20, 48 14, 56 26 S 70 34, 80 30 L200 30" fill="none" stroke="var(--accent)" stroke-width="1.8"/></svg>
+            </div>
+            <div class="box"><span class="co">4</span><h5>Tests</h5>
+              <span><span class="tick">✓</span> iq settles &lt; 2 ms <span style="float:right">1.3 ms</span></span>
+              <span><span class="cross">✗</span> overshoot &lt; 10 % <span style="float:right">14 %</span></span>
+              <span><span class="tick">✓</span> id stays within ±0.2 A</span>
+              <span><span class="tick">✓</span> ISR budget <span style="float:right">3.1 / 50 µs</span></span>
+            </div>
+          </div>
+        </div>
+      </div></div>
+      <div class="wf-notes">
+        <span class="route">/sandbox/[exercise]</span>
+        <h3>Firmware sandbox</h3>
+        <p class="muted" style="font-size:14px">The step from understanding FOC to writing it. The learner's function replaces the controller inside the existing Live lab motor model.</p>
+        <ol>
+          <li>Eight exercises in the order a real drive is brought up, each unlocked by the one before.</li>
+          <li>Editor with typed helpers (<code>clarke</code>, <code>park</code>, <code>svpwm</code>) available from exercise 3 on. The same code style ports almost directly to C on an STM32.</li>
+          <li>Reference (dashed) against the response, using the Live lab plot style.</li>
+          <li>Pass or fail tests with measured values, so the feedback is a number rather than a judgement.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- W5 Workspace -->
+    <div class="wf-item">
+      <div class="wf-scroll"><div class="wf">
+        <div class="wf-chrome"><i></i><i></i><i></i><span>motorlab / projects / encoder-speed-methods / work</span></div>
+        <div class="wf-nav"><b>Encoder speed: M, T and M/T methods</b><div class="ms"><span class="d">✓</span><em></em><span class="a">2</span><em></em><span>3</span></div><span class="btn ghost">Export JSON</span></div>
+        <div class="wf-body" style="grid-template-columns: 1fr 1.1fr 0.9fr;">
+          <div class="box fill"><span class="co">1</span>
+            <h5>Milestone 2 · Three estimators logging</h5>
+            <span style="color:var(--ink)">Done when:</span>
+            <span><span class="tick">☑</span> M, T and M/T running in the same ISR</span>
+            <span><span class="tick">☑</span> logs at ≥ 1 kHz, no dropped samples</span>
+            <span>☐ M-method resolution within 10 % of 60 / (4·N·Tₛ)</span>
+            <span class="btn">Attach evidence</span>
+          </div>
+          <div class="box"><span class="co">2</span>
+            <h5>Notebook</h5>
+            <span style="color:var(--ink)">4 Nov · 1.5 h</span>
+            <span>Timer overflow at 3000 rpm with 16-bit counter. Switched TIM2 to 32-bit.</span>
+            <div class="cv" style="min-height:48px"><svg viewBox="0 0 200 48" preserveAspectRatio="none"><path d="M0 40 L40 38 L80 30 L120 22 L160 14 L200 8" fill="none" stroke="var(--accent)" stroke-width="1.5"/><path d="M0 42 L20 30 L40 44 L60 28 L80 36 L100 20 L120 30 L140 12 L160 22 L180 6 L200 14" fill="none" stroke="var(--wf-ink)"/></svg></div>
+            <span>speed_log_03.csv · 12,000 rows</span>
+            <span style="color:var(--ink)">2 Nov · 2 h</span>
+            <span>Wired A/B to PA0/PA1, timer encoder mode, filter 0x6.</span>
+            <div class="row"><span class="btn ghost">+ Note</span><span class="btn ghost">+ Photo</span><span class="btn ghost">+ CSV</span></div>
+          </div>
+          <div class="box"><span class="co">3</span>
+            <h5>Parts · ₹1,640 of ₹2,200</h5>
+            <span><span class="tick">☑</span> 600 PPR encoder <span style="float:right">₹690</span></span>
+            <span><span class="tick">☑</span> Gear motor <span style="float:right">₹240</span></span>
+            <span><span class="tick">☑</span> STM32 board <span style="float:right">₹520</span></span>
+            <span><span class="tick">☑</span> DRV8871 driver <span style="float:right">₹190</span></span>
+            <span>☐ Shaft coupler <span style="float:right">—</span></span>
+            <h5 style="margin-top:6px">Self-review</h5>
+            <span>Correctness 3/4 · Measurement 2/4</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="wf-notes">
+        <span class="route">/projects/[id]/work</span>
+        <h3>Project workspace</h3>
+        <p class="muted" style="font-size:14px">Starting a project turns its brief into a tracker. Everything stays in the browser and can be exported as one JSON file.</p>
+        <ol>
+          <li>Milestones with acceptance criteria written as checks you can measure. A milestone closes only when every check is ticked.</li>
+          <li>Lab notebook entries with time, text, photos and CSV logs that draw a quick plot.</li>
+          <li>Parts list with planned and actual cost in ₹, plus the rubric self-review from section 04.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- W6 Arena -->
+    <div class="wf-item">
+      <div class="wf-scroll"><div class="wf">
+        <div class="wf-chrome"><i></i><i></i><i></i><span>motorlab / arena</span></div>
+        <div class="wf-nav"><b>Fault hunt · round 3 of 5</b><span>Combined faults</span><span style="color:var(--ink)">02:41</span><span style="color:var(--ink)">Score 640</span></div>
+        <div class="wf-body" style="grid-template-columns: 1fr 220px;">
+          <div style="display:grid;gap:12px">
+            <div class="box" style="padding:8px"><span class="co">1</span>
+              <div class="row sp"><h5>Drive telemetry · speed 3000 rpm, 40 % load</h5><span>random motor: 48 V hub, 23 pole pairs</span></div>
+              <div class="cv" style="min-height:120px"><svg viewBox="0 0 400 120" preserveAspectRatio="none">
+                <path d="M0 30 Q 10 22 20 30 T 40 30 T 60 30 T 80 30 T 100 30 T 120 30 T 140 30 T 160 30 T 180 30 T 200 30 T 220 30 T 240 30 T 260 30 T 280 30 T 300 30 T 320 30 T 340 30 T 360 30 T 380 30 T 400 30" fill="none" stroke="var(--ph-r)" stroke-width="1.4"/>
+                <path d="M0 70 Q 20 62 40 70 T 80 70 T 120 70 T 160 70 T 200 70 T 240 70 T 280 70 T 320 70 T 360 70 T 400 70" fill="none" stroke="var(--ph-b)" stroke-width="1.4"/>
+                <path d="M0 100 L400 98" fill="none" stroke="var(--ph-y)" stroke-width="1.4"/>
+                <text x="6" y="16" font-size="9" fill="var(--muted)" font-family="var(--font-mono)">iq</text><text x="6" y="58" font-size="9" fill="var(--muted)" font-family="var(--font-mono)">id</text><text x="6" y="92" font-size="9" fill="var(--muted)" font-family="var(--font-mono)">speed</text>
+              </svg></div>
+            </div>
+            <div class="box fill"><span class="co">3</span>
+              <h5>Your diagnosis (pick up to 2)</h5>
+              <div class="row"><span class="btn ghost">Phase A offset</span><span class="btn">Phase B gain ×1.25</span><span class="btn ghost">Encoder offset</span><span class="btn">Dead time uncompensated</span><span class="btn ghost">Integrator windup</span></div>
+              <span class="btn pri">Submit diagnosis</span>
+            </div>
+          </div>
+          <div class="box"><span class="co">2</span>
+            <h5>Instruments · 4 of 6 left</h5>
+            <span class="btn ghost" style="width:100%">Scope phase currents · −50</span>
+            <span class="btn ghost" style="width:100%">FFT of iq · −80</span>
+            <span class="btn ghost" style="width:100%">Lock rotor, read angle · −60</span>
+            <span class="btn ghost" style="width:100%">Speed step 1000 rpm · −30</span>
+            <span class="btn ghost" style="width:100%">Thermal reading · −40</span>
+            <span>Used: FFT shows 2·fₑ and 6·fₑ peaks</span>
+          </div>
+        </div>
+      </div></div>
+      <div class="wf-notes">
+        <span class="route">/arena</span>
+        <h3>Fault-hunt arena</h3>
+        <p class="muted" style="font-size:14px">Turns the existing Live lab missions into practice that can be replayed. Each round picks a random motor and a random fault, so memorising answers does not help.</p>
+        <ol>
+          <li>Telemetry from <code>lib/sim/lab.ts</code> with randomised motor parameters from a seed.</li>
+          <li>Each instrument costs points, which rewards choosing the most informative test first, as on a real bench.</li>
+          <li>Advanced rounds combine two faults. Scores and best times go to the portfolio.</li>
+        </ol>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 04 -->
+<section id="projects">
+  <div class="sec-head">
+    <span class="num">04</span>
+    <h2>Ten new projects, from beginner to advanced</h2>
+    <p class="read muted">Chosen to fill the coverage gaps in section 01: the two lessons with no project (AC phasors, induction motors) and the five with only one. Each one uses the app's <code>Project</code> fields, plus three new fields: <b>milestones</b> with acceptance checks, <b>pitfalls</b>, and <b>prereqs</b>. Budgets are rough Indian-market figures in ₹, like the existing ones; ₹0 means software only.</p>
+  </div>
+
+  <div class="ladder"><table>
+    <thead><tr><th>#</th><th>Project</th><th>Level</th><th>Weeks</th><th>Budget</th><th>Lessons it applies</th></tr></thead>
+    <tbody id="ladder"></tbody>
+  </table></div>
+
+  <div class="panel" style="margin-bottom:24px">
+    <h3>One rubric for every project deliverable</h3>
+    <p class="muted" style="font-size:14px;margin-bottom:14px">Scored 1–4 in the workspace for self-review. A score of 3 on all four criteria marks the project Applied on the lessons it links to.</p>
+    <div class="rubric">
+      <div><b>Correctness</b><span class="muted">Does it work, and do the acceptance checks pass with real numbers?</span></div>
+      <div><b>Measurement</b><span class="muted">Are units, uncertainty and test conditions stated? Could someone repeat it?</span></div>
+      <div><b>Explanation</b><span class="muted">Is the result tied to the lesson's equations, with any mismatch explained?</span></div>
+      <div><b>Safety and method</b><span class="muted">Current limits, fusing, guarding and a clean bring-up order.</span></div>
+    </div>
+  </div>
+
+  <div class="proj-list" id="projlist"></div>
+</section>
+
+<!-- 05 -->
+<section id="schema">
+  <div class="sec-head">
+    <span class="num">05</span>
+    <h2>Data model changes</h2>
+    <p class="read muted">Everything stays as TypeScript content plus browser storage, as today. Only the tutor needs a server route. Changes to <code>lib/content/types.ts</code>, <code>lib/content/projects.ts</code> and <code>components/ProgressProvider.tsx</code>:</p>
+  </div>
+<pre class="schema"><span class="c">// lib/content/types.ts</span>
+interface Lesson {
+  …existing fields
+  <span class="a">requires?: string[];</span>          <span class="c">// lesson ids → skill map edges (F1)</span>
+  <span class="a">worked?: { prompt: string; steps: string[]; answer: string };</span>  <span class="c">// F2</span>
+  <span class="a">formulas?: string[];</span>          <span class="c">// ids into lib/content/reference.ts (F3)</span>
+  <span class="a">gen?: (seed: number) =&gt; ChallengeItem;</span>  <span class="c">// fresh numbers for checkpoints (F9)</span>
+}
+
+<span class="c">// lib/content/projects.ts</span>
+interface Project {
+  …existing fields
+  <span class="a">prereqs?: string[];</span>           <span class="c">// lessons to master first</span>
+  <span class="a">milestones?: { title: string; accept: string[] }[];</span>  <span class="c">// workspace checks (F12)</span>
+  <span class="a">pitfalls?: string[];</span>
+}
+
+<span class="c">// localStorage "emk-progress-v3", migrated from v2 on first load</span>
+interface ProgressV3 {
+  xp: number;                                  <span class="c">// kept</span>
+  lessons: Record&lt;string, { quiz: number; chal: number; debug: boolean; pow: boolean; worked: number }&gt;;
+  cards: Record&lt;string, { box: 1|2|3|4|5; due: string; lapses: number }&gt;;   <span class="c">// F5, Leitner boxes</span>
+  workspaces: Record&lt;string, { started: string; checks: Record&lt;string, boolean&gt;;
+                               notes: Note[]; spend: Record&lt;string, number&gt;; rubric?: number[] }&gt;;
+  sandbox: Record&lt;string, { code: string; passed: boolean }&gt;;
+  arena: { best: number; rounds: number };
+}
+
+<span class="c">// Mastery is derived, never stored:
+// Seen       → opened the lesson
+// Practised  → quiz ≥ 80 % and every challenge solved
+// Applied    → also a sandbox exercise or a linked project at rubric ≥ 3
+// Mastered   → also its review cards reached box 4 (about 3 weeks of spacing)</span></pre>
+
+  <div class="copy-row">
+    <button class="copy" id="copybtn" type="button">Copy the 10 projects as TypeScript</button>
+    <span class="copy-msg" id="copymsg">Ready to append to <code>PROJECTS</code> in <code>lib/content/projects.ts</code>.</span>
+  </div>
+  <label for="tsout" class="copy-msg" style="display:none" id="tslabel">Copy didn't work in this viewer. Select the text below instead.</label>
+  <textarea id="tsout" readonly></textarea>
+</section>
+
+<!-- 06 -->
+<section id="plan">
+  <div class="sec-head">
+    <span class="num">06</span>
+    <h2>Build order</h2>
+    <p class="read muted">Each phase can ship on its own. Phase 1 is mostly content and one new store, so learners see value within three weeks.</p>
+  </div>
+  <div class="phases">
+    <div class="phase">
+      <span class="when">Phase 1 · weeks 1–3</span>
+      <h3>Remember and measure</h3>
+      <ul>
+        <li>F5 Review queue and the v3 progress migration</li>
+        <li>F6 Mastery states on lessons, tracks and home</li>
+        <li>F2 Worked examples for the 18 core lessons first</li>
+        <li>F3 Formula sheet and glossary</li>
+        <li>The 10 projects in section 04, with milestones</li>
+      </ul>
+      <div class="files">app/review · app/reference · ProgressProvider.tsx · types.ts · projects.ts · reference.ts</div>
+    </div>
+    <div class="phase">
+      <span class="when">Phase 2 · weeks 4–8</span>
+      <h3>Apply</h3>
+      <ul>
+        <li>F10 Firmware sandbox, exercises 1–4, then 5–8</li>
+        <li>F12 Project workspace with JSON export</li>
+        <li>F11 Design calculators</li>
+        <li>F1 Skill map from <code>requires</code></li>
+        <li>F9 Track checkpoints with generated numbers</li>
+      </ul>
+      <div class="files">app/sandbox/[ex] · lib/sim/worker.ts · app/projects/[id]/work · app/tools · app/map</div>
+    </div>
+    <div class="phase">
+      <span class="when">Phase 3 · weeks 9–12</span>
+      <h3>Prove</h3>
+      <ul>
+        <li>F8 Fault-hunt arena with combined faults</li>
+        <li>F13 Real-data overlay and parameter fitting</li>
+        <li>F14 Portfolio page with print stylesheet</li>
+        <li>F4 Tutor, F15 write-up review</li>
+        <li>F7 Placement check</li>
+      </ul>
+      <div class="files">app/arena · app/portfolio · app/api/tutor/route.ts · lib/fit.ts</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">Based on the Motor Control Lab codebase as of 6 November 2026: <code>lib/content</code>, <code>lib/sim</code> and <code>components</code>. Budgets are planning estimates, not quotes.</div></footer>
+
+<script>
+const FEATURES = [
+  { g: "Learn", sub: "Understand it the first time", items: [
+    { id: "F1", p: "P1", e: "M", t: "Skill map", d: "An interactive graph of all 30 lessons with prerequisite links, coloured by mastery. It answers “what can I take on next?” better than the linear route.", how: "Add requires: string[] to each lesson. Lay out tracks as columns and levels as rows, and draw edges in SVG.", ux: "Nothing is ever locked. Unmet prerequisites show as dashed nodes with a “Test out” option." },
+    { id: "F2", p: "P0", e: "S", t: "Worked examples", d: "One fully solved problem per lesson, revealed one step at a time, placed before the challenges. Learners see how an expert breaks a problem down before attempting one.", how: "Optional worked field on Lesson. A small StepReveal component in LessonView.", ux: "“Show next step” and “I've got it, let me try”. Counts as half a challenge toward XP." },
+    { id: "F3", p: "P0", e: "S", t: "Formula sheet and glossary", d: "Every equation in the app on one page (/reference) with symbol definitions, units, typical values and the lesson it comes from. Terms in lesson text link to it.", how: "lib/content/reference.ts. A Ctrl+K search across lessons, formulas and projects.", ux: "Printable as a two-page cheat sheet for the bench." },
+    { id: "F4", p: "P2", e: "M", t: "Claude tutor", d: "A side drawer on every lesson that knows the theory, the sim's current slider values and the learner's wrong answers. It asks questions and gives hints rather than answers.", how: "A Next route handler at app/api/tutor that calls the Claude API (claude-sonnet-5-5) server-side, with the lesson as context and a per-day request limit.", ux: "Hint ladder: nudge, then the relevant equation, then a worked step. It never reveals a challenge's answer." },
+  ]},
+  { g: "Master", sub: "Keep it and prove it to yourself", items: [
+    { id: "F5", p: "P0", e: "M", t: "Review queue", d: "Every quiz item, challenge and debug case becomes a review card. A Leitner schedule (1, 3, 7, 21, 60 days) brings each back just before it would be forgotten. Home shows “12 cards · about 6 min”.", how: "Cards are built from existing lesson data, so no new content is needed. Store box and due date per card in progress v3.", ux: "Numeric cards come back with new numbers when the lesson has a generator (F9)." },
+    { id: "F6", p: "P0", e: "S", t: "Mastery states", d: "Four states per lesson: Seen, Practised, Applied, Mastered. Track progress becomes the share of lessons Mastered. This gives a truer picture than XP, which only counts completion.", how: "Derived from stored progress, never stored itself. Rules are in section 05.", ux: "Shown as small fills on track rows, the skill map and home." },
+    { id: "F7", p: "P2", e: "S", t: "Placement check", d: "A 15-question adaptive diagnostic for learners who already know some of the material. It recommends a starting week on the 13-week route and marks known lessons as Tested out.", how: "Draws two questions per track from existing quizzes, stepping up or down a level after each answer.", ux: "Offered once on the landing page, then on the route page." },
+    { id: "F8", p: "P1", e: "M", t: "Fault-hunt arena", d: "Timed, replayable rounds built on the Live lab: a random motor, a hidden fault (two at Advanced), and a limited set of instruments that each cost points.", how: "Seeded RNG over the existing FAULTS and MOTOR in lab.ts. Add combined faults and an instrument cost table.", ux: "Five rounds per session. Best score and median time go to the portfolio." },
+    { id: "F9", p: "P1", e: "S", t: "Track checkpoints", d: "A 20-minute mixed exam at the end of each track. Pass at 80% to mark the track complete. Numeric problems get fresh values each attempt so answers cannot be memorised.", how: "Optional gen(seed) on lessons that returns a ChallengeItem. Start with the 18 core lessons.", ux: "Two attempts a day. Wrong items go straight into the review queue." },
+  ]},
+  { g: "Apply", sub: "Use it on real problems", items: [
+    { id: "F10", p: "P0", e: "L", t: "Firmware sandbox", d: "Write the control loop yourself in TypeScript and run it at 20 kHz against the Live lab PMSM model. Automated tests report settling time, overshoot, ripple and ISR budget. This is the closest the app can get to writing real FOC firmware.", how: "Run the lab.ts plant plus the learner's isr() in a Web Worker for safety and speed. CodeMirror 6 editor. A test spec per exercise.", ux: "Eight exercises: PI speed, Clarke/Park, current loop, anti-windup, SVPWM, dead-time compensation, field weakening, back-EMF observer." },
+    { id: "F11", p: "P1", e: "S", t: "Design calculators", d: "Five bench tools: vehicle-to-motor sizing (mass, slope, speed to torque and power), hover power and endurance, MOSFET loss and heatsink, DC-link ripple current, and wire gauge from current and temperature rise.", how: "Pure functions in lib/calc with unit tests, reusing formulas from the reference sheet.", ux: "Each result links back to the lesson that derives it and can be pinned to a project notebook." },
+    { id: "F12", p: "P0", e: "M", t: "Project workspace", d: "Start a project and its brief becomes a tracker: milestones with acceptance checks, a lab notebook (notes, photos, CSV logs), a parts list with actual spend, hours, and a rubric self-review.", how: "New route /projects/[id]/work. Photos stored in IndexedDB. One-click JSON export and import for backup.", ux: "A milestone closes only when all its checks are ticked. Finishing marks linked lessons Applied." },
+    { id: "F13", p: "P2", e: "M", t: "Real-data overlay", d: "Import a CSV from a scope or serial logger and overlay it on the matching simulation on the same axes. Fit R, L, Kv and inertia from a step response.", how: "lib/fit.ts with least-squares fitting over the existing sim models. Column-mapping dialog on import.", ux: "The measured trace in ink, the sim in vermilion, and the fitted values in a small table." },
+  ]},
+  { g: "Prove", sub: "Show it to others", items: [
+    { id: "F14", p: "P1", e: "M", t: "Portfolio page", d: "An auto-built page of mastered lessons, finished projects with their deliverables and measured-against-datasheet tables, sandbox exercises passed and arena scores, for internships and job applications.", how: "Reads progress v3 and workspaces. Print stylesheet for PDF.", ux: "The learner chooses which projects to include and writes a one-line summary for each." },
+    { id: "F15", p: "P2", e: "S", t: "Write-up review", d: "The rubric from section 04 for self-review, plus an optional Claude review of the project write-up that comments on each criterion and points out missing units or unexplained mismatches.", how: "Reuses the tutor route with a rubric prompt. Learners can always see and edit the scores.", ux: "Feedback appears next to each rubric row, never as a single grade." },
+    { id: "F16", p: "P1", e: "S", t: "Platform basics", d: "Dark theme (the app is light-only today), offline support for the bench, keyboard-operable sim sliders, and a data-table fallback under each canvas for screen readers.", how: "Theme tokens already exist in globals.css. A web manifest plus Next's static export for offline use.", ux: "Theme follows the system with a manual toggle in the header." },
+  ]},
+];
+
+const LV_SAFETY = "Work at 12–24 V from a current-limited supply. Wear eye protection when anything spins.";
+const HV_SAFETY = "Above 60 V DC is dangerous. Stay at 48 V or below, use a fused, current-limited supply and never work on a live board.";
+const LIPO_SAFETY = "Charge and discharge LiPo packs in a fire-safe bag, never below 3.3 V per cell, and never unattended.";
+
+const PROJECTS = [
+  {
+    id: "current-balance", title: "Current balance: weigh the force on a wire", cat: "motor", level: "Beginner", weeks: 1, budget: [700, 1400],
+    tagline: "Measure F = B·I·L on a kitchen scale and see exactly where motor torque comes from.",
+    learn: ["Lorentz force on a current-carrying conductor", "Estimating flux density from a force measurement", "Linear fits, R² and measurement uncertainty"],
+    parts: [["0.01 g pocket scale", 450], ["Neodymium block magnets (4)", 300], ["18 SWG copper wire and a rigid stand", 150], ["3 A buck module with ammeter, or a bench supply", 400]],
+    steps: ["Place two magnets on the scale, poles facing, to form a 10 mm gap", "Fix a rigid U-loop of wire through the gap from a separate stand so it does not touch the scale", "Tare the scale, then pass 0 to 3 A in 0.5 A steps and record the reading", "Reverse the current and repeat", "Plot force against current. The slope is B·L", "Estimate B, compare it with a phone magnetometer, and work out the Kt of a 12-turn coil of the same size"],
+    deliverable: "A force against current plot with a linear fit, R² and a B estimate with uncertainty, plus one paragraph linking the slope to a motor's torque constant.",
+    stretch: "Vary the gap and compare B against gap with the reluctance model from the magnetic-circuits lesson.",
+    lessons: ["em-torque", "magnetic-circuit"], prereqs: ["em-torque"],
+    milestones: [
+      { title: "Rig built", accept: ["Scale reading is stable to ±0.02 g with current off", "Wire loop does not touch the scale or magnets"] },
+      { title: "Data collected", accept: ["At least 7 current values in each direction", "Readings reverse sign when the current reverses"] },
+      { title: "Analysis", accept: ["Linear fit with R² above 0.98", "B estimate within 25% of the magnetometer reading"] },
+    ],
+    pitfalls: ["The wire heats up and its resistance rises: use a constant-current source", "Stiff supply leads push on the loop and look like force", "Magnets pull on steel parts of the scale: use a plastic spacer"],
+    safety: LV_SAFETY,
+  },
+  {
+    id: "drill-generator-3ph", title: "Three-phase power from a drone motor and a drill", cat: "power", level: "Beginner", weeks: 1, budget: [1800, 3000],
+    tagline: "Spin a BLDC with a drill and you have a three-phase generator to measure voltage, frequency, phase and power on.",
+    learn: ["Line and phase voltage, and where √3 comes from", "Electrical against mechanical frequency and pole pairs", "Balanced power P = √3·V·I·cos φ, and how inductance shifts phase"],
+    parts: [["2212 or 2306 BLDC motor", 900], ["Three 10 Ω 10 W resistors and three 100 µH inductors", 300], ["Arduino Nano with three biased voltage dividers", 450], ["DSO138 scope kit or USB logic analyser", 1000], ["Cordless drill (borrowed)", 0]],
+    steps: ["Couple the motor to the drill chuck by the bell bolt or a shaft coupler", "Measure open-circuit line voltage at three speeds and check Kv", "Find the pole pairs from electrical frequency and rpm", "Connect a star resistor load and sample all three phase voltages at 5 kHz with a 2.5 V bias", "Compute RMS, phase angles, and check the three phases sum to near zero", "Add the inductors, measure the phase shift and power factor, and compare with the three-phase sim"],
+    deliverable: "A phasor diagram drawn from your own data, a table of line-to-phase voltage ratio (expect 1.73), and power against speed.",
+    stretch: "Compare star and delta loading at the same speed, then unbalance one phase and measure the neutral shift.",
+    lessons: ["three-phase", "ac-phasors", "motor-constants"], prereqs: ["ac-phasors"],
+    milestones: [
+      { title: "Generator running", accept: ["Electrical frequency equals pole pairs × rpm / 60 within 3%", "Measured Kv within 10% of the datasheet"] },
+      { title: "Balanced load", accept: ["Line-to-phase ratio is 1.73 ± 0.05", "The three sampled phases sum to under 5% of peak"] },
+      { title: "Reactive load", accept: ["Measured phase shift within 5° of ωL/R prediction", "Power factor reported at three speeds"] },
+    ],
+    pitfalls: ["Arduino pins cannot take negative voltage: bias the dividers to 2.5 V", "Drill speed drifts as the load changes: record rpm with every sample", "The resistors get hot: keep runs short"],
+    safety: LV_SAFETY,
+  },
+  {
+    id: "encoder-speed-methods", title: "Encoder speed: M, T and M/T methods compared", cat: "embedded", level: "Beginner", weeks: 1, budget: [1200, 2200],
+    tagline: "The same encoder with three algorithms gives very different noise at low speed. Measure where each one wins.",
+    learn: ["Timer encoder mode and input capture", "Speed resolution against sample time and line count", "Choosing a switchover speed between methods"],
+    parts: [["600 PPR optical encoder", 700], ["Small DC gear motor", 250], ["STM32 board (Blue Pill or Nucleo)", 520], ["DRV8871 motor driver", 200], ["Shaft coupler", 150]],
+    steps: ["Wire A and B to a timer in encoder mode and turn on the input filter", "Implement the M method: count edges every 1 ms", "Implement the T method: time between edges with input capture", "Implement M/T: counts and elapsed time over a variable window", "Log all three at 1 kHz over serial while ramping from 10 to 3000 rpm", "Plot noise and lag against speed and choose a switchover speed"],
+    deliverable: "Speed resolution against rpm for each method on one plot, and a recommended switchover speed with a short justification.",
+    stretch: "Add a PLL speed observer and compare its lag and noise with the M/T method.",
+    lessons: ["quadrature-encoder", "loop-timing"], prereqs: ["quadrature-encoder"],
+    milestones: [
+      { title: "Counting", accept: ["Count matches 4 × PPR for one hand-turned revolution", "No missed edges at 3000 rpm"] },
+      { title: "Three estimators logging", accept: ["M, T and M/T running in the same ISR", "Logs at 1 kHz or faster with no dropped samples", "M-method resolution within 10% of 60 / (4·N·Tₛ)"] },
+      { title: "Comparison", accept: ["Noise and lag plotted for all three methods", "Switchover speed chosen and justified"] },
+    ],
+    pitfalls: ["A 16-bit counter overflows at high speed: use a 32-bit timer or handle wraparound", "Cheap encoders bounce: use the timer's input filter", "Serial bandwidth limits the log rate: send binary, not text"],
+    safety: LV_SAFETY,
+  },
+  {
+    id: "clarke-park-notebook", title: "Clarke and Park on logged phase currents", cat: "embedded", level: "Beginner", weeks: 1, budget: [0, 0],
+    tagline: "Take three noisy phase currents and turn them into flat d and q lines, then learn to read faults from the ripple.",
+    learn: ["Amplitude-invariant Clarke and Park transforms", "Why offset errors ripple at fₑ and gain errors at 2·fₑ", "Writing round-trip tests for numerical code"],
+    parts: [["Python with NumPy and Matplotlib (free)", 0], ["CSV from the Live lab export or the provided generator", 0]],
+    steps: ["Generate or load ia, ib, ic and θ at 20 kHz", "Implement Clarke and check that α and β trace a circle", "Implement Park and plot id and iq", "Add a 5° angle error and watch torque leak into the d axis", "Add a 1 A offset and a 10% gain error, and measure the ripple frequency in d and q", "Write a test that inverse transforms round-trip to within 1e-9"],
+    deliverable: "A notebook with five plots and a table mapping each injected fault to its d-q ripple frequency and size.",
+    stretch: "Repeat with the power-invariant transform and explain every scale factor that changes.",
+    lessons: ["clarke-park", "pmsm-dq"], prereqs: ["clarke-park"],
+    milestones: [
+      { title: "Transforms", accept: ["Round-trip error under 1e-9", "α-β path is a circle for balanced currents"] },
+      { title: "Fault signatures", accept: ["Offset shows ripple at fₑ", "Gain error shows ripple at 2·fₑ", "Angle error moves current from q to d by sin(error)"] },
+      { title: "Write-up", accept: ["Fault table complete with ripple size", "Plots labelled with units"] },
+    ],
+    pitfalls: ["Mixing power-invariant and amplitude-invariant scaling", "Using mechanical angle where electrical angle is needed", "Park sign conventions differ between textbooks: pick one and state it"],
+  },
+  {
+    id: "vf-induction-sim", title: "Induction motor model and V/f drive in simulation", cat: "motor", level: "Intermediate", weeks: 2, budget: [0, 0],
+    tagline: "Build the induction motor the industry runs on, then start it with a V/f drive and see why low-speed boost matters.",
+    learn: ["Equivalent circuit and the torque–slip curve", "The dynamic α-β induction motor model", "V/f control, voltage boost and slip compensation"],
+    parts: [["Python or the firmware sandbox (free)", 0], ["Nameplate data of a 0.37 kW motor (provided)", 0]],
+    steps: ["Implement the steady-state equivalent circuit and plot torque against slip", "Implement the dynamic α-β model with 10 kHz Euler integration", "Check the dynamic model's steady state against the equivalent circuit", "Add a V/f ramp from 0 to 50 Hz and try to start at 50% load", "Add low-speed voltage boost and show the motor now starts", "Add slip compensation and measure speed error under load"],
+    deliverable: "Torque–speed curves at 10, 25 and 50 Hz, and start-up traces with and without boost, with an explanation of the difference.",
+    stretch: "Add an inverter with dead time and see how it hurts V/f at very low frequency.",
+    lessons: ["induction-slip", "three-phase"], prereqs: ["induction-slip", "rl-transient"],
+    milestones: [
+      { title: "Steady-state model", accept: ["Torque–slip curve shows the breakdown torque", "Rated slip within 1% of nameplate"] },
+      { title: "Dynamic model", accept: ["Steady-state torque matches the equivalent circuit within 5%", "Simulation stable at the chosen time step"] },
+      { title: "V/f drive", accept: ["Without boost the motor stalls at 50% load below 5 Hz", "With boost it starts at 2 Hz", "Slip compensation halves the speed error"] },
+    ],
+    pitfalls: ["The equations are stiff: a step that is too large blows up", "Rotor quantities must be referred to the stator", "Per-phase and total power differ by a factor of three"],
+  },
+  {
+    id: "bemf-observer-offline", title: "Back-EMF observer on recorded data: SMO against PLL", cat: "embedded", level: "Intermediate", weeks: 2, budget: [0, 1500],
+    tagline: "Estimate rotor angle from voltages and currents alone, and score it against the encoder you are not allowed to use.",
+    learn: ["Voltage-model angle estimation", "Sliding-mode observer, filter lag and phase compensation", "PLL angle tracking and its low-speed limits"],
+    parts: [["Live lab CSV export (free)", 0], ["Optional: logs from your foc-scratch board", 0], ["Optional: USB-UART adapter for logging", 300]],
+    steps: ["Record vα, vβ, iα, iβ and encoder angle across a speed ramp", "Implement the voltage-model estimator", "Implement a sliding-mode observer with a low-pass filter and phase compensation", "Implement a PLL to track angle and speed", "Plot angle error against speed for both methods, using the encoder only to score", "Find the lowest speed where error stays below 10° electrical, and test sensitivity to a 20% resistance error"],
+    deliverable: "An angle error against speed plot for both observers, your minimum usable speed, and an explanation of why low speed fails.",
+    stretch: "Run the better observer live in the firmware sandbox, exercise 8.",
+    lessons: ["sensorless", "clarke-park"], prereqs: ["sensorless", "clarke-park"],
+    milestones: [
+      { title: "Data", accept: ["At least 5 s of logs from 5% to 100% rated speed", "Encoder angle aligned to electrical zero"] },
+      { title: "Observers", accept: ["Both observers below 5° error above 20% speed", "Filter phase lag compensated and shown before and after"] },
+      { title: "Limits", accept: ["Minimum speed found for each observer", "Effect of 20% resistance error measured"] },
+    ],
+    pitfalls: ["Ignoring the low-pass filter's phase lag", "Angle error wraps at ±180°: unwrap before plotting", "Using the encoder inside the observer by accident"],
+  },
+  {
+    id: "hover-endurance", title: "Hover endurance from real battery discharge data", cat: "drone", level: "Intermediate", weeks: 2, budget: [2500, 4500],
+    tagline: "Fit a battery model from your own discharge tests and predict hover time before you ever fly.",
+    learn: ["Thevenin battery model: R₀ and an RC pair", "How voltage sag cuts usable capacity at high C-rate", "Combining thrust-stand data with a battery model"],
+    parts: [["3S 2200 mAh LiPo", 1500], ["MOSFET and op-amp constant-current load with heatsink", 800], ["INA226 current and voltage sensor", 350], ["ESP32 logger", 450], ["LiPo fire-safe bag", 400]],
+    steps: ["Build a constant-current load and check its accuracy with a multimeter", "Discharge at 1C, 3C and 5C, logging voltage, current and temperature", "Fit R₀, R₁ and C₁ from the voltage steps at each state of charge", "Combine with hover power from your thrust stand or the thrust sim", "Predict hover time for the scale board", "Check the prediction with a tethered hover or a bench test at hover current"],
+    deliverable: "A fitted battery model with parameters against state of charge, and a predicted hover time compared with a measured one.",
+    stretch: "Scale the model to the full-size flying board pack and produce a sizing chart of endurance against pack mass.",
+    lessons: ["battery-pack", "thrust-hover", "board-sizing"], prereqs: ["battery-pack", "thrust-hover"],
+    milestones: [
+      { title: "Load", accept: ["Constant-current load holds within 2% from 4.2 to 3.3 V per cell", "Temperature logged"] },
+      { title: "Model", accept: ["Model predicts terminal voltage within 3% across all three tests"] },
+      { title: "Prediction", accept: ["Hover-time prediction within 10% of measurement", "Usable capacity at 5C stated against nameplate"] },
+    ],
+    pitfalls: ["Discharging below 3.3 V per cell damages the pack", "Ignoring temperature: a warm pack gives longer times", "Hover current rises as voltage sags: model constant power, not constant current"],
+    safety: LIPO_SAFETY,
+  },
+  {
+    id: "induction-foc", title: "Indirect rotor-flux FOC for an induction motor", cat: "embedded", level: "Advanced", weeks: 3, budget: [0, 3000],
+    tagline: "The control scheme behind most industrial drives and many EV traction motors, built and stress-tested in simulation and HIL.",
+    learn: ["Rotor flux orientation and slip-frequency calculation", "Current-loop tuning by pole-zero cancellation", "Sensitivity to rotor time constant error"],
+    parts: [["Dynamic model from the V/f project (free)", 0], ["Optional: STM32 board for hardware-in-the-loop", 1500], ["Optional: second board as the plant", 1500]],
+    steps: ["Reuse the α-β model and add a rotor-flux estimator", "Compute slip frequency as ω_sl = iq / (τr·id) and integrate to the flux angle", "Tune d and q current PI loops by pole-zero cancellation", "Add a speed loop with anti-windup", "Run with rotor time constant wrong by ±30% and measure torque and flux error", "Port the controller to an STM32 against the hil-model plant"],
+    deliverable: "Torque step and speed step results, a plot of torque error against rotor time constant error, and HIL timing figures.",
+    stretch: "Add online rotor time constant adaptation and show it recovers from a 30% error.",
+    lessons: ["induction-slip", "foc-fw", "current-loop-delay"], prereqs: ["foc-fw", "induction-slip"],
+    milestones: [
+      { title: "Control in simulation", accept: ["Torque step settles within 5 ms", "Rotor flux holds within 2% at constant id"] },
+      { title: "Sensitivity", accept: ["Torque and flux error measured at −30%, 0 and +30% τr error", "Result explained with the slip equation"] },
+      { title: "HIL", accept: ["Controller runs at 10 kHz with under 50% CPU", "HIL response matches simulation within 5%"] },
+    ],
+    pitfalls: ["Starting before rotor flux has built up: magnetise with id first", "Wrong τr gives a stable but weak drive that is easy to miss", "Discretising the integrators differently in sim and firmware"],
+  },
+  {
+    id: "hfi-startup", title: "Zero-speed sensorless control by high-frequency injection", cat: "embedded", level: "Advanced", weeks: 4, budget: [4000, 8000],
+    tagline: "Find rotor angle at standstill with no sensor by listening to how inductance changes with angle.",
+    learn: ["Saliency and measuring Ld and Lq", "Square-wave injection and demodulation", "Magnet polarity detection and handover to a back-EMF observer"],
+    parts: [["Interior-magnet PMSM with real saliency (or the simulation)", 3000], ["Your 48 V inverter board or a B-G431B-ESC1", 2500], ["Encoder for scoring only", 700], ["Current-limited 24–48 V supply", 0]],
+    steps: ["Measure Ld and Lq by locked-rotor voltage pulses at several angles", "Inject a 1 kHz square-wave voltage on the estimated d axis", "Demodulate the q-axis current ripple to get an angle error signal", "Close a PLL on that error signal", "Detect magnet polarity with positive and negative d-axis pulses", "Hand over to the back-EMF observer above 10% speed"],
+    deliverable: "Angle error at standstill under load, polarity detection results over 20 trials, and a trace of a smooth handover.",
+    stretch: "Lower the injection voltage until it stops working and plot the noise floor.",
+    lessons: ["sensorless", "pmsm-dq", "current-loop-delay"], prereqs: ["sensorless", "pmsm-dq"],
+    milestones: [
+      { title: "Saliency", accept: ["Lq/Ld ratio measured and above 1.3", "Inductance against angle plotted"] },
+      { title: "Standstill estimate", accept: ["Angle error under 15° electrical at standstill with 50% load", "Polarity correct in 20 of 20 trials"] },
+      { title: "Handover", accept: ["No torque dip above 20% during handover", "Encoder used only for scoring"] },
+    ],
+    pitfalls: ["Surface-magnet motors such as hub motors have almost no saliency", "Dead time distorts small injection voltages", "Injection is audible: keep it short and low"],
+    safety: HV_SAFETY,
+  },
+  {
+    id: "drive-commissioning", title: "Drive commissioning capstone: from bare board to test report", cat: "ev", level: "Advanced", weeks: 4, budget: [0, 2000],
+    tagline: "Take your inverter or e-bike controller through the bring-up and fault testing a real drive team does, and publish the report.",
+    learn: ["A safe bring-up sequence for a motor drive", "Fault-injection testing and trip times", "Writing a test report others can trust"],
+    parts: [["Your inverter-pcb or ebike-foc hardware", 0], ["Isolated scope probe or differential probe", 1500], ["Fuses, current-limited supply and an e-stop", 500]],
+    steps: ["Write a commissioning checklist: insulation, gate signals with no load, dead time on a scope, current sensor offset and gain", "Bring up in order: open-loop V/f, then current loop, then speed loop", "Run a fault matrix: over-current, regen over-voltage, encoder unplugged, CAN timeout, over-temperature", "Check that each fault trips safely and log the trip time", "Run 20 minutes at rated load and log temperatures", "Measure a 9-point efficiency map and write the report"],
+    deliverable: "A commissioning report with the checklist, fault matrix with trip times, thermal run and efficiency map, ready for the portfolio.",
+    stretch: "Automate the fault matrix over CAN so it runs as one script.",
+    lessons: ["telemetry-debug", "motor-thermal", "foc-fw", "can-bus"], prereqs: ["foc-fw", "telemetry-debug"],
+    milestones: [
+      { title: "Bring-up", accept: ["Checklist complete with scope captures", "Each control stage stable before the next is closed"] },
+      { title: "Fault matrix", accept: ["All 5 faults trip with logged trip times", "No component damaged in any test"] },
+      { title: "Report", accept: ["20-minute thermal run within limits", "Efficiency map at 9 points", "Report reviewed against the rubric"] },
+    ],
+    pitfalls: ["Closing the speed loop before the current loop is proven", "Scope ground clips on a non-isolated inverter", "Testing regen over-voltage without a brake resistor or a supply that can sink current"],
+    safety: HV_SAFETY,
+  },
+];
+
+const EXISTING = { "ac-phasors": 0, "induction-slip": 0, "three-phase": 1, "em-torque": 1, "clarke-park": 1, "quadrature-encoder": 1, "sensorless": 1, "board-sizing": 1 };
+const LESSON_NAMES = { "ac-phasors": "AC phasors", "induction-slip": "Induction motors", "three-phase": "Three-phase power", "em-torque": "Current to torque", "clarke-park": "Clarke and Park", "quadrature-encoder": "Encoders", "sensorless": "Sensorless", "board-sizing": "Board sizing" };
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const inr = (n) => "₹" + n.toLocaleString("en-IN");
+const budget = (b) => (b[1] === 0 ? "₹0 · software" : b[0] === 0 ? "₹0–" + b[1].toLocaleString("en-IN") : inr(b[0]) + "–" + b[1].toLocaleString("en-IN"));
+
+/* coverage */
+(function () {
+  const added = {};
+  PROJECTS.forEach((p) => p.lessons.forEach((l) => { added[l] = (added[l] || 0) + 1; }));
+  const max = 5;
+  document.getElementById("cov").innerHTML = Object.keys(EXISTING).map((k) => {
+    const a = added[k] || 0, e = EXISTING[k];
+    return `<div class="cov-row"><span>${esc(LESSON_NAMES[k])}</span><span class="bar" aria-hidden="true">${"<i></i>".repeat(0)}<i style="width:${(100 * e) / max}%"></i><i class="add" style="width:${(100 * a) / max}%"></i></span><span class="n">${e} → ${e + a}</span></div>`;
+  }).join("");
+})();
+
+/* features */
+document.getElementById("groups").innerHTML = FEATURES.map((g) => `
+  <div><div class="group-title"><h3>${esc(g.g)}</h3><span class="muted">${esc(g.sub)}</span></div>
+  <div class="feat-grid">${g.items.map((f) => `
+    <article class="feat ${f.p === "P0" ? "p0" : ""}">
+      <div class="feat-top"><div><div class="fid">${f.id}</div><h4>${esc(f.t)}</h4></div>
+        <div class="pills"><span class="pill ${f.p.toLowerCase()}">${f.p}</span><span class="pill">${f.e}</span></div></div>
+      <p>${esc(f.d)}</p>
+      <dl><div><dt>How it's built</dt><dd>${esc(f.how)}</dd></div><div><dt>Experience</dt><dd>${esc(f.ux)}</dd></div></dl>
+    </article>`).join("")}</div></div>`).join("");
+
+/* ladder */
+document.getElementById("ladder").innerHTML = PROJECTS.map((p, i) => `
+  <tr><td class="num muted">${String(i + 1).padStart(2, "0")}</td><td><a href="#p-${p.id}">${esc(p.title)}</a></td>
+  <td><span class="lv lv-${p.level}">${p.level}</span></td><td class="num">${p.weeks}</td><td class="num">${budget(p.budget)}</td>
+  <td class="muted">${p.lessons.map(esc).join(", ")}</td></tr>`).join("");
+
+/* project specs */
+document.getElementById("projlist").innerHTML = PROJECTS.map((p, i) => {
+  const total = p.parts.reduce((s, x) => s + x[1], 0);
+  return `<article class="proj" id="p-${p.id}">
+    <div class="proj-head">
+      <div class="proj-meta"><span class="mono">${String(i + 1).padStart(2, "0")}</span><span class="lv lv-${p.level}">${p.level}</span><span>${p.weeks} week${p.weeks > 1 ? "s" : ""}</span><span>${budget(p.budget)}</span><code>${p.id}</code></div>
+      <h3>${esc(p.title)}</h3>
+      <p class="tag">${esc(p.tagline)}</p>
+    </div>
+    <div class="proj-grid">
+      <div><h4>You will learn</h4><ul>${p.learn.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h4>Parts</h4><div class="parts">${p.parts.map((x) => `<div><span>${esc(x[0])}</span><span>${x[1] ? inr(x[1]) : "free"}</span></div>`).join("")}<div class="tot"><span>Total</span><span>${total ? inr(total) : "₹0"}</span></div></div></div>
+      <div><h4>Steps</h4><ol>${p.steps.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></div>
+      <div><h4>Milestones and acceptance checks</h4><div class="miles">${p.milestones.map((m, j) => `<div class="mile"><b>${j + 1}</b><div><div>${esc(m.title)}</div><div class="acc">${m.accept.map(esc).join(" · ")}</div></div></div>`).join("")}</div></div>
+      <div class="full deliv"><b>Deliverable.</b> ${esc(p.deliverable)}</div>
+      <div><h4>Common pitfalls</h4><ul>${p.pitfalls.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div><h4>Stretch goal</h4><p style="font-size:14.5px">${esc(p.stretch)}</p>
+        <h4 style="margin-top:14px">Before you start</h4><p style="font-size:14.5px" class="muted">Master: ${p.prereqs.map(esc).join(", ")}. Applies: ${p.lessons.map(esc).join(", ")}.</p>
+        ${p.safety ? `<p class="safety" style="margin-top:10px">${esc(p.safety)}</p>` : ""}</div>
+    </div>
+  </article>`;
+}).join("");
+
+/* TypeScript export */
+function toTS() {
+  const q = (s) => JSON.stringify(s);
+  const safetyRef = { [LV_SAFETY]: "LV_SAFETY", [HV_SAFETY]: "HV_SAFETY" };
+  const lines = ["  /* ---------------------------------------------------------------- roadmap additions */",
+    "  // add near the top of the file if not present:",
+    "  // const LIPO_SAFETY = " + q(LIPO_SAFETY) + ";"];
+  PROJECTS.forEach((p) => {
+    lines.push("  {");
+    lines.push(`    id: ${q(p.id)}, title: ${q(p.title)}, cat: ${q(p.cat)}, level: ${q(p.level)}, weeks: ${p.weeks}, budget: [${p.budget[0]}, ${p.budget[1]}],`);
+    lines.push(`    tagline: ${q(p.tagline)},`);
+    lines.push(`    learn: ${q(p.learn)},`);
+    lines.push(`    parts: ${q(p.parts)},`);
+    lines.push(`    steps: ${q(p.steps)},`);
+    lines.push(`    deliverable: ${q(p.deliverable)},`);
+    lines.push(`    stretch: ${q(p.stretch)},`);
+    lines.push(`    lessons: ${q(p.lessons)}, prereqs: ${q(p.prereqs)},`);
+    lines.push(`    milestones: ${q(p.milestones)},`);
+    lines.push(`    pitfalls: ${q(p.pitfalls)},`);
+    if (p.safety) lines.push(`    safety: ${safetyRef[p.safety] || (p.safety === LIPO_SAFETY ? "LIPO_SAFETY" : q(p.safety))},`);
+    lines.push("  },");
+  });
+  return lines.join("\n");
+}
+document.getElementById("copybtn").addEventListener("click", async () => {
+  const text = toTS();
+  const msg = document.getElementById("copymsg");
+  try {
+    await navigator.clipboard.writeText(text);
+    msg.textContent = "Copied. Paste it inside the PROJECTS array, after the last entry.";
+  } catch (e) {
+    const ta = document.getElementById("tsout");
+    ta.value = text; ta.style.display = "block";
+    document.getElementById("tslabel").style.display = "block";
+    ta.focus(); ta.select();
+    msg.textContent = "";
+  }
+});
+</script>
+</body>
+</html>
